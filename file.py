@@ -60,6 +60,12 @@ class File():
                 return "images/photo.png"
             if extension == "txt":
                 return "images/txt.png"
+            if extension == "c":
+                return "images/c.png"
+            if extension == "cpp":
+                return "images/c.png"
+            if extension == "json":
+                return "images/json.png"
             else:
                 return "images/file.png"
         else:
