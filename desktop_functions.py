@@ -49,26 +49,27 @@ def check_events(desktop, settings, side_screen, login_screen):
                     while True:
                         try:
                             if count == 0:
-                                with open(os.path.join(desktop.path,"New file.txt"),"x"):
+                                with open(os.path.join(desktop.path,"New File.txt"),"x"):
                                     pass
                                 if settings.ID1FS:
-                                    id1fs.create_file_backup(os.path.join(desktop.path,f"New_File.txt"))
+                                    id1fs.create_file_backup(os.path.join(desktop.path,"New File.txt"))
+                                    id1fs.create_metadata(os.path.join(desktop.path,"New File.txt"))
                             else:
-                                with open(os.path.join(desktop.path,f"New_File({count}).txt"),"x"):
+                                with open(os.path.join(desktop.path,f"New File({count}).txt"),"x"):
                                    pass
                                 if settings.ID1FS:
-                                    id1fs.create_file_backup(os.path.join(desktop.path,f"New_File({count}).txt"))
+                                    id1fs.create_file_backup(os.path.join(desktop.path,f"New File({count}).txt"))
+                                    id1fs.create_metadata(os.path.join(desktop.path,f"New File({count}).txt"))
                                     
                             break
                         except FileExistsError:
                             count = count + 1
                     desktop.Initialize_desktop()
             if event.key == pygame.K_DELETE:
-                if settings.selected_file != None:
-                    os.remove(settings.selected_file.path)
-                    settings.selected_file = None
-                    desktop.Initialize_desktop()
                 if settings.hover_icon != None and str(settings.hover_icon) == "File":
+                    if settings.ID1FS:
+                        id1fs.delete_file_backup(os.path.join(desktop.path,settings.hover_icon.name))
+                        id1fs.delete_metadata(os.path.join(desktop.path,settings.hover_icon.name))
                     os.remove(settings.hover_icon.path)
                     settings.hover_icon = None
                     desktop.Initialize_desktop()
@@ -83,11 +84,19 @@ def check_events(desktop, settings, side_screen, login_screen):
             if settings.changing_name == True:
                 if event.key == pygame.K_RETURN:
                     try:
+                        path = settings.changing_name_icon.path
                         os.rename(settings.changing_name_icon.path, os.path.join(desktop.path,settings.name))
+                        if settings.ID1FS:
+                            id1fs.delete_file_backup(path)
+                            id1fs.create_file_backup(os.path.join(desktop.path,settings.name))
+                            id1fs.delete_metadata(path)
+                            id1fs.create_metadata(os.path.join(desktop.path,settings.name))
+
                     except OSError:
                         pass
                     settings.changing_name = False
                     settings.changing_name_icon = None
+                    settings.hover_icon = None
                     desktop.Initialize_desktop()
                 elif event.key == pygame.K_BACKSPACE:
                     settings.name = settings.name[:-1]
@@ -180,12 +189,19 @@ def check_events(desktop, settings, side_screen, login_screen):
                 if not settings.ID1FS:
                     desktop.path = os.path.dirname(path)
                     desktop.Initialize_desktop()
-                elif "C:\\Users\\Oussama\\Documents\\Deskrop_env\\ID1FS" in os.path.dirname(path):
+                elif "C:\\Users\\Oussama\\Documents\\File_Explorer_Using_Python\\ID1FS" in os.path.dirname(path):
                     desktop.path = os.path.dirname(path)
                     desktop.Initialize_desktop()
             if side_screen.home_rect.collidepoint(mouse_x,mouse_y):
-                desktop.path = "C:\\Users\\Oussama"
-                desktop.Initialize_desktop()
+                if not settings.ID1FS:
+                    desktop.path = "C:\\Users\\Oussama"
+                    desktop.Initialize_desktop()
+                else:
+                    desktop.path = "C:\\Users\\Oussama\\Documents\\File_Explorer_Using_Python\\ID1FS\\home"
+                    desktop.Initialize_desktop()
+            if side_screen.chess_rect.collidepoint(mouse_x,mouse_y):
+                command = "cd C:\\Users\\Oussama\\Documents\\chess_game_with_python && python C:\\Users\\Oussama\\Documents\\chess_game_with_python\\chess.py"
+                subprocess.run(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
             elif  side_screen.ID1FS == False and side_screen.id1fs_rect.collidepoint(mouse_x,mouse_y):
                 settings.login = True
                 settings.password = ""
@@ -196,7 +212,7 @@ def check_events(desktop, settings, side_screen, login_screen):
             elif side_screen.ID1FS and side_screen.id1fs_logout_rect.collidepoint(mouse_x,mouse_y):
                 settings.ID1FS = False
                 side_screen.ID1FS = False
-                desktop.path = "C:\\Users\\Oussama\\Documents\\Deskrop_env"
+                desktop.path = "C:\\Users\\Oussama\\Documents\\File_Explorer_Using_Python"
                 desktop.Initialize_desktop()
             elif login_screen.login == False and login_screen.register_button_image_rect.collidepoint(mouse_x,mouse_y):
                 login_screen.register = True
@@ -213,7 +229,7 @@ def check_login(desktop,settings,side_screen, login_screen):
             settings.login = False
             settings.ID1FS = True
             side_screen.ID1FS = True
-            desktop.path = "C:\\Users\\Oussama\\Documents\\Deskrop_env\\ID1FS\\home"
+            desktop.path = "C:\\Users\\Oussama\\Documents\\File_Explorer_Using_Python\\ID1FS\\home"
             desktop.Initialize_desktop()
         else:
             print("Wrong password")
@@ -290,6 +306,11 @@ def collisions_file(desktop,settings):
         for folder in desktop.folders:
             if folder.rect.colliderect(settings.selected_file.rect):
                 shutil.move(settings.selected_file.path,folder.path)
+                if settings.ID1FS:
+                    id1fs.delete_file_backup(settings.selected_file.path)
+                    id1fs.create_file_backup(os.path.join(folder.path,settings.selected_file.name))
+                    id1fs.delete_metadata(settings.selected_file.path)
+                    id1fs.create_metadata(os.path.join(folder.path,settings.selected_file.name))
                 desktop.Initialize_desktop()
                 settings.selected_file = None
                 break
@@ -300,7 +321,18 @@ def collisions_folder(desktop, settings):
             if folder != settings.selected_folder:
                 if folder.rect.colliderect(settings.selected_folder.rect):
                     try:
+                        if settings.ID1FS:
+                            for root, dirs, files in os.walk(settings.selected_folder.path):
+                                for file in files:
+                                    id1fs.delete_file_backup(os.path.join(root,file))
+                                    id1fs.delete_metadata(os.path.join(root,file))
                         shutil.move(settings.selected_folder.path,folder.path)
+                        if settings.ID1FS:
+                            for root, dirs, files in os.walk(os.path.join(folder.path,settings.selected_folder.name)):
+                                for file in files:
+                                    id1fs.create_file_backup(os.path.join(root,file))
+                                    id1fs.create_metadata(os.path.join(root,file))
+                        settings.selected_folder = None
                         desktop.Initialize_desktop()
                     except shutil.Error:
                         pass
@@ -341,7 +373,8 @@ def draw_screen(screen, settings, desktop, side_screen, login_screen):
         font = pygame.font.Font(font_path, 10)
         name_image = font.render(settings.name, True, settings.name_color, settings.name_bg)
         name_rect = name_image.get_rect()
-        name_rect.bottomleft = screen.get_rect().bottomleft
+        name_rect.bottom = screen.get_rect().bottom
+        name_rect.left = side_screen.side_rect.right
         screen.blit(name_image, name_rect)
     side_screen.draw()
     if settings.login == True:

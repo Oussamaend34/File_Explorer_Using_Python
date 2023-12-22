@@ -16,7 +16,7 @@ def run_env():
         if not settings.ID1FS:
             pygame.display.set_caption(desktop.path)
         else:
-            pygame.display.set_caption(desktop.path.replace("C:\\Users\\Oussama\\Documents\\Deskrop_env\\ID1FS",""))
+            pygame.display.set_caption(desktop.path.replace("C:\\Users\\Oussama\\Documents\\File_Explorer_Using_Python\\ID1FS",""))
         df.check_events(desktop, settings,side_screen, login_screen)
         df.moving_icons(settings)
         df.hover_icon(desktop, settings)

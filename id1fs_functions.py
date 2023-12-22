@@ -179,13 +179,14 @@ def delete_file_backup(path):
     """Delete a file backup from the filesystem."""
     key = load_key()
     fernet = Fernet(key)
-    key = load_key()
     bp_folder = get_backup()
     for file in os.listdir(bp_folder):
         file_temp = bytes(file, 'utf-8')
         temp = fernet.decrypt(file_temp).decode('utf-8')
+        print(temp.split('|')[0])
+        print(path)
         if temp.split('|')[0] == path:
-            os.remove(bp_folder+"/"+file)
+            os.remove(os.path.join(bp_folder,file))
             break
 
 
@@ -269,7 +270,7 @@ def get_backup():
     return stat["bf"]
 def get_system():
     """Return the full paht to the system."""
-    with open("C:\\Users\\Oussama\\Documents\\Deskrop_env\\system\\env.json", "r") as f:
+    with open("C:\\Users\\Oussama\\Documents\\File_Explorer_Using_Python\\system\\env.json", "r") as f:
         stat = json.load(f)
     return stat["systm"]
 
@@ -321,7 +322,6 @@ def restore_file(path):
         print("This file doesn't exist.")
         return False
     else:
-        
         delete_file(path)
         bp_folder = get_backup()
         key = load_key()
