@@ -1,0 +1,15 @@
+{
+    "python": "py.png",
+    "winrar": "rar.png",
+    "word": "doc.png",
+    "excel": "xlsx.png",
+    "pdf": "pdf.png",
+    "video": "video.png",
+    "txt": "txt.png",
+    "c": "c.png",
+    "cpp": "cpp.png",
+    "json": "json.png",
+    "exe": "exe.png",
+    "file": "file.png",
+    "ppt": "ppt.png"
+}

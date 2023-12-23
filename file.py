@@ -1,5 +1,6 @@
 import pygame
 import os
+import json
 
 class File():
     """A class that contains the settings of a folder."""
@@ -8,7 +9,7 @@ class File():
         self.path = path
         self.name = os.path.basename(path)
         self.reduced_name = self.name[:10]
-        self.image = pygame.image.load(self.get_file_image())
+        self.image = self.get_file_image()
         self.rect = self.image.get_rect()
         self.pos = None
         self.text_color = (30, 30, 30)
@@ -41,32 +42,46 @@ class File():
                 return "start vlc " + self.path
             
     
-    def get_file_image(self):
+    def get_file_type(self):
         extension = self.name.split(".")[-1]
         if "." in self.name:
             if extension == "py":
-                return "images/py.png"
+                return "python"
             if extension == "rar":
-                return "images/rar.png"
+                return "winrar"
             if extension == "docx":
-                return "images/doc.png"
+                return "word"
             if extension == "pdf":
-                return "images/pdf.png"
+                return "pdf"
             if extension == "xlsx":
-                return "images/xlsx.png"
+                return "excel"
             if extension in ["mp4","mkv","avi", "mov", "wmv", "flv", "webm", "3gp", "ogg", "ogv", "m4v", "mpg", "mpeg", "mov", "rm", "rmvb", "asf"]:
-                return "images/video.png"
+                return "video"
             if extension in ["jpg", "jpeg","png", "bmp", "tiff", "tif", "raw","svg", "webp", "heif","ico","pnm","pgm","ppm","pbm","hdr","exr","jfif"]:
-                return "images/photo.png"
+                return "photo"
             if extension == "txt":
-                return "images/txt.png"
+                return "txt"
             if extension == "c":
-                return "images/c.png"
+                return "c"
             if extension == "cpp":
-                return "images/c.png"
+                return "c"
             if extension == "json":
-                return "images/json.png"
+                return "json"
+            if extension == "exe":
+                return "exe"
+            if extension == "ppt":
+                return "ppt"
             else:
-                return "images/file.png"
+                return "file"
         else:
-            return "images/file.png"
+            return "file"
+    def get_file_image(self):
+        type = self.get_file_type()
+        if type == "photo":
+            original_image = pygame.image.load(self.path)
+            resized_image = pygame.transform.scale(original_image, (64, 64))
+            return resized_image
+        else:
+            with open("system/files.json") as f:
+                files = json.load(f)
+            return pygame.image.load(os.path.join("images",files[type]))
