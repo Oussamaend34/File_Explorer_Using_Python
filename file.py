@@ -87,6 +87,28 @@ class File():
                 return "php"
             if extension == "java":
                 return "java"
+            if extension == "iso":
+                return "iso"
+            if extension == "zip":
+                return "zip"
+            if extension == "7z":
+                return "7z"
+            if extension == "gz":
+                return "gz"
+            if extension == "bz2":
+                return "bz2"
+            if extension == "xz":
+                return "xz"
+            if extension == "tar":
+                return "tar"
+            if extension == "apk":
+                return "apk"
+            if extension == "psd":
+                return "psd"
+            if extension == "ai":
+                return "ai"
+            if extension == "csv":
+                return "csv"
             else:
                 return "file"
         else:
