@@ -235,6 +235,7 @@ def check_login(desktop,settings,side_screen, login_screen):
             print("Wrong password")
             settings.login = False
     else:
+        settings.login = False
         print("Wrong username")
             
 def add_user(settings ,login_screen):

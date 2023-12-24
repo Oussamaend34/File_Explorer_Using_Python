@@ -4,7 +4,7 @@ class LoginScreen:
     def __init__(self, screen):
         self.screen = screen
         self.screen_rect = screen.get_rect()
-        self.bg_color = (190, 190, 190)
+        self.bg_color = (60,70,120)
         self.field_color = (255, 255, 255)
         self.text_color = (0, 0, 0)
         self.rect = pygame.Rect(0, 0, 300, 200)

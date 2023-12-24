@@ -5,11 +5,20 @@
     "excel": "xlsx.png",
     "pdf": "pdf.png",
     "video": "video.png",
+    "audio": "audio.png",
     "txt": "txt.png",
     "c": "c.png",
     "cpp": "cpp.png",
     "json": "json.png",
     "exe": "exe.png",
     "file": "file.png",
-    "ppt": "ppt.png"
+    "ppt": "ppt.png",
+    "sh": "sh.png",
+    "html": "html.png",
+    "css": "css.png",
+    "js": "js.png",
+    "php": "php.png",
+    "java": "java.png",
+    "scala": "scala.png",
+    "font": "ttf.png"
 }

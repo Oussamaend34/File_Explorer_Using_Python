@@ -49,7 +49,7 @@ class File():
                 return "python"
             if extension == "rar":
                 return "winrar"
-            if extension == "docx":
+            if extension in  ["docx","doc"]:
                 return "word"
             if extension == "pdf":
                 return "pdf"
@@ -57,8 +57,10 @@ class File():
                 return "excel"
             if extension in ["mp4","mkv","avi", "mov", "wmv", "flv", "webm", "3gp", "ogg", "ogv", "m4v", "mpg", "mpeg", "mov", "rm", "rmvb", "asf"]:
                 return "video"
-            if extension in ["jpg", "jpeg","png", "bmp", "tiff", "tif", "raw","svg", "webp", "heif","ico","pnm","pgm","ppm","pbm","hdr","exr","jfif"]:
+            if extension in ["jpg", "jpeg","png", "bmp", "tiff", "tif", "raw","svg", "webp", "heif","ico","pnm","pgm","ppm","pbm","hdr","exr","jfif","gif"]:
                 return "photo"
+            if extension in ["mp3","wav","aac","ogg","wma","flac","alac","aiff","dsd","pcm","mp2","m4a","m4b","m4p","m4r","mid","midi","xmf","rtttl","rtx","ota","imy","ogg","oga","spx","opus","amr","awb","3gp","mp4","m4v","mp4v","3g2","3gpp","3gpp2","avi","divx","flv","mkv","mk3d","mov","mp4","mpeg","mpg","mpe","webm","wmv","asf","ts","m2ts","m2t","mts","mxf","ogv","ogm","qt","rm","rmvb","vob","ifo"]:
+                return "audio"
             if extension == "txt":
                 return "txt"
             if extension == "c":
@@ -69,8 +71,22 @@ class File():
                 return "json"
             if extension == "exe":
                 return "exe"
-            if extension == "ppt":
+            if extension in ["ppt","pptx"]:
                 return "ppt"
+            if extension == "ttf":
+                return "font"
+            if extension == "sh":
+                return "sh"
+            if extension == "html":
+                return "html"
+            if extension == "css":
+                return "css"
+            if extension == "js":
+                return "js"
+            if extension == "php":
+                return "php"
+            if extension == "java":
+                return "java"
             else:
                 return "file"
         else:
