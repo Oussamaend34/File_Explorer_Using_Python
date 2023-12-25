@@ -12,6 +12,8 @@ def run_env():
     desktop = Desktop(screen, settings,".")
     side_screen = SideScreen(screen)
     login_screen = LoginScreen(screen)
+    cursor_image = pygame.image.load("images/cursor.png")
+    new_cursor_image = pygame.transform.scale(cursor_image, (20, 20))
     while True:
         if not settings.ID1FS:
             pygame.display.set_caption(desktop.path)
@@ -22,6 +24,8 @@ def run_env():
         df.hover_icon(desktop, settings)
         df.inhover_icon(desktop, settings)
         df.check_double_click(settings)
+        df.change_mouse_cursor(desktop, settings,side_screen)
         df.draw_screen(screen, settings, desktop, side_screen, login_screen)
+
 
 run_env()

@@ -74,7 +74,14 @@ def check_events(desktop, settings, side_screen, login_screen):
                     settings.hover_icon = None
                     desktop.Initialize_desktop()
                 if settings.hover_icon != None and str(settings.hover_icon) == "Folder" and settings.shift:
+                    if settings.ID1FS:
+                        for root, dirs, files in os.walk(settings.hover_icon.path):
+                            for file in files:
+                                id1fs.delete_file_backup(os.path.join(root,file))
+                                id1fs.delete_metadata(os.path.join(root,file))
+                    pygame.SYSTEM_CURSOR_WAIT
                     shutil.rmtree(settings.hover_icon.path)
+                    pygame.SYSTEM_CURSOR_ARROW
                     settings.hover_icon = None
                     desktop.Initialize_desktop()
             if event.key == pygame.K_LCTRL or event.key == pygame.K_RCTRL:
@@ -91,7 +98,6 @@ def check_events(desktop, settings, side_screen, login_screen):
                             id1fs.create_file_backup(os.path.join(desktop.path,settings.name))
                             id1fs.delete_metadata(path)
                             id1fs.create_metadata(os.path.join(desktop.path,settings.name))
-
                     except OSError:
                         pass
                     settings.changing_name = False
@@ -306,7 +312,9 @@ def collisions_file(desktop,settings):
                     break
         for folder in desktop.folders:
             if folder.rect.colliderect(settings.selected_file.rect):
+                pygame.SYSTEM_CURSOR_WAIT
                 shutil.move(settings.selected_file.path,folder.path)
+                pygame.SYSTEM_CURSOR_ARROW
                 if settings.ID1FS:
                     id1fs.delete_file_backup(settings.selected_file.path)
                     id1fs.create_file_backup(os.path.join(folder.path,settings.selected_file.name))
@@ -327,7 +335,9 @@ def collisions_folder(desktop, settings):
                                 for file in files:
                                     id1fs.delete_file_backup(os.path.join(root,file))
                                     id1fs.delete_metadata(os.path.join(root,file))
+                        pygame.SYSTEM_CURSOR_WAIT
                         shutil.move(settings.selected_folder.path,folder.path)
+                        pygame.SYSTEM_CURSOR_ARROW
                         if settings.ID1FS:
                             for root, dirs, files in os.walk(os.path.join(folder.path,settings.selected_folder.name)):
                                 for file in files:
@@ -349,7 +359,24 @@ def moving_icons(settings):
         mouse_x, mouse_y = pygame.mouse.get_pos()
         settings.selected_file.rect.center = mouse_x, mouse_y
   
-    
+
+def change_mouse_cursor(desktop, settings,side_screen):
+
+    mouse_x, mouse_y = pygame.mouse.get_pos()
+    if side_screen.before_rect.collidepoint(mouse_x,mouse_y):
+        pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
+    elif side_screen.home_rect.collidepoint(mouse_x,mouse_y):
+        pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
+    elif side_screen.chess_rect.collidepoint(mouse_x,mouse_y):
+        pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
+    elif side_screen.id1fs_rect.collidepoint(mouse_x,mouse_y):
+        pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
+    elif side_screen.id1fs_logout_rect.collidepoint(mouse_x,mouse_y):
+        pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
+    else:
+        pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
+
+
 
 def draw_screen(screen, settings, desktop, side_screen, login_screen):
     """Draw the screen."""
@@ -380,4 +407,5 @@ def draw_screen(screen, settings, desktop, side_screen, login_screen):
     side_screen.draw()
     if settings.login == True:
         login_screen.draw()
+    change_mouse_cursor(desktop, settings,side_screen)
     pygame.display.flip()
